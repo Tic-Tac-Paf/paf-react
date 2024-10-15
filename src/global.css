@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: "ClashDisplay";
+    src: url("/fonts/ClashDisplay/ClashDisplay-Bold.otf") format("truetype");
+    font-weight: 700;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "ClashDisplay";
+    src: url("/fonts/ClashDisplay/ClashDisplay-Semibold.otf") format("truetype");
+    font-weight: 600;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "ClashDisplay";
+    src: url("/fonts/ClashDisplay/ClashDisplay-Medium.otf") format("truetype");
+    font-weight: 500;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "ClashDisplay";
+    src: url("/fonts/ClashDisplay/ClashDisplay-Regular.otf") format("truetype");
+    font-weight: 400;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "ClashDisplay";
+    src: url("/fonts/ClashDisplay/ClashDisplay-Light.otf") format("truetype");
+    font-weight: 300;
+    font-display: swap;
+  }
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0px; /* width of the entire scrollbar */
+}
+
+.thin-scrollbar::-webkit-scrollbar {
+  width: 6px; /* width of the entire scrollbar */
+  height: 6px; /* width of the entire scrollbar */
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* color of the tracking area */
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(128, 128, 128, 0.5); /* color of the scroll thumb */
+  border-radius: 20px; /* roundness of the scroll thumb */
+}
+
+html {
+  scroll-behavior: smooth;
+}
