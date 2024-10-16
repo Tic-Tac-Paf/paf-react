@@ -12,6 +12,8 @@ const Router: React.FC = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomeScreen />} />
+          <Route path="/create" element={<CreateScreen />} />
+          <Route path="/join" element={<JoinScreen />} />
         </Routes>
       </BrowserRouter>
     </DefaultLayout>
