@@ -7,10 +7,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#FFD700",
+        primary: "#F07323",
         border: "#111113",
         skeleton: colors.gray,
-        bg: "#FFF7D2",
+        bg: "#DDCCB9",
       },
       letterSpacing: {
         wider: "0.04rem",
