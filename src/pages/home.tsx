@@ -13,11 +13,13 @@ export const HomeScreen: React.FC = () => {
         className="w-[350px] h-auto -mb-10"
       />
 
-      <h1 className=" text-[96px] font-bold ">TicTacPaf</h1>
+      <h1 className="text-[96px]">Tic Tac Paf</h1>
 
       <div className="flex items-center justify-center gap-10 ">
-        <OutlinedButton label="Rejoindre" onClick={() => navigate("join")} />
-        <OutlinedButton label="Créer" onClick={() => navigate("create")} />
+        <OutlinedButton
+          label="Démarrer une partie"
+          onClick={() => navigate("create")}
+        />
       </div>
     </div>
   );

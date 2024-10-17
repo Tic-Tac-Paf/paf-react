@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { OutlinedButton } from "../core/ui/buttons";
-import UserIcon from "../assets/user-icon";
+import UserIcon from "../assets/img/user-icon";
 import { useNavigate } from "react-router-dom";
 import { TextInput } from "../core/ui/form-inputs";
 
@@ -27,12 +27,12 @@ export const JoinScreen: React.FC = () => {
       <UserIcon />
 
       <div className="flex flex-col justify-center items-start gap-1 ">
-        <p className=" text-[36px] font-bold">Nom</p>
+        <p className=" text-[36px] ">Nom</p>
         <TextInput value={name} onChange={(e) => setName(e.target.value)} />
       </div>
 
       <div className="flex flex-col justify-center items-start gap-1 ">
-        <p className=" text-[36px] font-bold">Code d'accès</p>
+        <p className=" text-[36px] ">Code d'accès</p>
         <TextInput
           value={accessCode}
           onChange={(e) => setAccessCode(e.target.value)}

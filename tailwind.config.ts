@@ -16,7 +16,8 @@ const config: Config = {
         wider: "0.04rem",
       },
       fontFamily: {
-        sans: ["ClashDisplay", ...defaultTheme.fontFamily.sans],
+        sans: ["Luckiest Guy", ...defaultTheme.fontFamily.sans],
+        inter: ["Inter", ...defaultTheme.fontFamily.sans],
       },
     },
   },

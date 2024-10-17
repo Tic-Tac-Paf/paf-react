@@ -1,42 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Luckiest+Guy&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  @font-face {
-    font-family: "ClashDisplay";
-    src: url("/fonts/ClashDisplay/ClashDisplay-Bold.otf") format("truetype");
-    font-weight: 700;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "ClashDisplay";
-    src: url("/fonts/ClashDisplay/ClashDisplay-Semibold.otf") format("truetype");
-    font-weight: 600;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "ClashDisplay";
-    src: url("/fonts/ClashDisplay/ClashDisplay-Medium.otf") format("truetype");
-    font-weight: 500;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "ClashDisplay";
-    src: url("/fonts/ClashDisplay/ClashDisplay-Regular.otf") format("truetype");
-    font-weight: 400;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "ClashDisplay";
-    src: url("/fonts/ClashDisplay/ClashDisplay-Light.otf") format("truetype");
-    font-weight: 300;
-    font-display: swap;
-  }
+.luckiest-guy {
+  font-family: "Luckiest Guy", cursive;
+  font-weight: 400;
+  font-style: normal;
 }
 
 :root {

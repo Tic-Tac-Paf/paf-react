@@ -40,7 +40,6 @@ export const SelectInput = forwardRef<HTMLSelectElement | null, SelectProps>(
           className
         )}
       >
-        <option value=""> Choisir une option </option>
         {options.map((option: SelectOption) => (
           <option key={option.value} value={option.value}>
             {option.label}
