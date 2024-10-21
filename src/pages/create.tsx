@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { OutlinedButton } from "../core/ui/buttons";
 import UserIcon from "../assets/img/user-icon";
 import { useNavigate } from "react-router-dom";
 import { SelectInput, SelectOption, TextInput } from "../core/ui/form-inputs";
+// import { useCreateRoom } from "../core/api/use-create-room";
+import { useWebSocket } from "../core/providers/wss-provider";
 
 const gameModes: SelectOption[] = [
   {
@@ -21,25 +23,45 @@ const gameModes: SelectOption[] = [
 
 export const CreateScreen: React.FC = () => {
   const navigate = useNavigate();
+  const ws = useWebSocket(); // Utilisation du WebSocket via le Provider
 
   const [name, setName] = useState("");
   const [gameMode, setGameMode] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    console.log(name);
-  }, [name]);
+    if (ws) {
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
 
-  const handleCreateRoom = () => {
+        if (data.type === "roomCreated") {
+          localStorage.setItem("playerId", data.playerId);
+          navigate(`/waiting-room/${data.room.code}`);
+        } else if (data.type === "roomNotFound") {
+          setMessage("Room not found");
+        }
+      };
+    }
+  }, [ws, navigate]);
+
+  const handleCreateRoom = useCallback(() => {
     if (!name || !gameMode) {
       return alert("Veuillez remplir tous les champs");
     }
 
-    alert(
-      `Nouvele room créée avec le nom ${name} et le mode de jeu ${gameMode}`
-    );
-    // create room and return id to navigate
-    navigate("/waiting-room/123456");
-  };
+    if (ws) {
+      const playerId = localStorage.getItem("playerId") || "1";
+
+      ws.send(
+        JSON.stringify({
+          type: "createRoom",
+          username: name,
+          gameMode: gameMode,
+          playerId,
+        })
+      );
+    }
+  }, [name, gameMode, ws]);
 
   return (
     <div className="flex flex-col justify-center items-center gap-10 h-full w-full mx-auto">
@@ -60,6 +82,8 @@ export const CreateScreen: React.FC = () => {
       </div>
 
       <OutlinedButton label="Créer la room" onClick={handleCreateRoom} />
+
+      <p>{message}</p>
     </div>
   );
 };

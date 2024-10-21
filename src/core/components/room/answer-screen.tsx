@@ -1,84 +1,71 @@
 import { answers } from "../../../assets/mocks/room";
-import { admins } from "../../../assets/mocks/users";
 import { UserItem } from "../../../pages/waiting-room";
-import { Answer, Question } from "../../types/room";
+import { Question } from "../../types/room";
 
 export const ValideAnswers: React.FC<{
   question: Question;
 }> = ({ question }) => {
+  const chunkAnswers = (arr: typeof answers, chunkSize: number) => {
+    // Fonction pour diviser les réponses en sous-groupes
+    return arr.reduce((acc, _, index) => {
+      if (index % chunkSize === 0) {
+        acc.push(arr.slice(index, index + chunkSize));
+      }
+      return acc;
+    }, [] as (typeof answers)[]);
+  };
+
+  // Diviser les réponses en groupes de 3
+  const groupedAnswers = chunkAnswers(answers, 3);
+
   return (
-    <div className="flex flex-col items-center gap-10 h-full w-full">
-      <h2 className="text-3xl">Round 1 :</h2>
+    <div className="flex flex-col items-center justify-center gap-8 mt-10 w-full px-6 ">
+      <h2 className="text-3xl font-bold">Round 1 :</h2>
 
       {/* Question et réponse */}
-      <div className="flex flex-col items-center justify-center text-center">
-        <p className="text-[28px] italic font-inter font-semibold">
+      <div className="flex flex-col items-center text-center gap-4">
+        <p className="text-3xl italic font-inter font-semibold">
           {question.question}
         </p>
-        <p className="text-3xl font-light font-inter">{question.answer}</p>
+        <p className="text-2xl font-light font-inter">{question.answer}</p>
       </div>
 
-      {/* Afficher les réponses des joueurs en haut */}
-      <div className="w-[95%] grid justify-items-end">
-        <div className=" max-w-[80%] grid grid-cols-5 gap-5">
-          {answers.map((answer, index) => (
-            <div key={index} className="flex flex-col items-center">
-              <UserItem name={answer.name} />
-              <div className="border-2 border-black bg-white rounded-[10px] w-[170px] h-[50px] flex items-center justify-center p-2">
-                <p className="text-[20px] font-inter">{answer.answer}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Section des admins et boutons */}
-      <div className="w-[95%] grid grid-cols-6 gap-5 justify-items-center">
-        {/* Liste des admins */}
-        <div className="w-[95%] grid justify-items-start">
-          <div className="max-w-[20%] flex flex-col justify-center items-start gap-4">
-            {admins.map((admin, index) => (
-              <p key={index} className="text-xl font-semibold">
-                {admin}
-              </p>
-            ))}
-          </div>
-        </div>
-
-        {/* Boutons pour chaque réponse */}
-        {answers.map((answer, index) => (
+      <div className="w-full flex flex-col items-center gap-8 overflow-y-auto">
+        {groupedAnswers.map((group, groupIndex) => (
           <div
-            key={index}
-            className="flex flex-col gap-4 justify-center items-center"
+            key={groupIndex}
+            className="w-full max-w-7xl flex items-center justify-center gap-8 flex-wrap"
           >
-            {admins.map((admin, adminIndex) => (
-              <AdminButtons key={adminIndex} admin={admin} answer={answer} />
+            {group.map((answer, index) => (
+              <div
+                key={index}
+                className="max-w-[400px] w-full flex flex-col items-center justify-center bg-gray-100 p-6 rounded-lg shadow-lg gap-4"
+              >
+                <UserItem name={answer.name} />
+                <div className="border-2 border-black bg-white rounded-lg w-full h-16 flex items-center justify-center p-2">
+                  <p className="text-lg font-inter">{answer.answer}</p>
+                </div>
+
+                {/* Boutons pour valider ou invalider la réponse */}
+                <div className="flex gap-4 mt-2">
+                  <button
+                    className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition"
+                    onClick={() => handleValidate("Theo", answer.name)}
+                  >
+                    O
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition"
+                    onClick={() => handleInvalidate("Theo", answer.name)}
+                  >
+                    X
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         ))}
       </div>
-    </div>
-  );
-};
-
-const AdminButtons: React.FC<{
-  admin: string;
-  answer: Answer;
-}> = ({ admin, answer }) => {
-  return (
-    <div className="flex gap-2">
-      <button
-        className="bg-green-500 text-white px-4 py-2 rounded-full"
-        onClick={() => handleValidate(admin, answer.name)}
-      >
-        O
-      </button>
-      <button
-        className="bg-red-500 text-white px-4 py-2 rounded-full"
-        onClick={() => handleInvalidate(admin, answer.name)}
-      >
-        X
-      </button>
     </div>
   );
 };

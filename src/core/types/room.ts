@@ -13,15 +13,18 @@ export interface Question {
 }
 
 export interface Room {
-  roomId: string;
+  code: { type: string; unique: true };
+  admin: {
+    id: string;
+    username: string;
+  };
+  players: Player[];
   gameMode: string;
-  users: {
-    name: string;
-    score: number;
-  }[];
-  adminId: string;
-  adminName: string;
-  questions: Question[];
-  difficulty: "easy" | "medium" | "hard";
-  nbRounds: number;
+  difficulty: string;
+  rounds: number;
+}
+
+export interface Player {
+  id: string;
+  username: string;
 }
