@@ -10,12 +10,12 @@ export const OutlinedButton: React.FC<{
     <button
       onClick={onClick}
       className={twMerge(
-        "px-8 py-2 text-primary bg-transparent text-[40px] border-4 border-primary rounded-full hover:bg-primary hover:text-white",
+        "px-8 py-2 text-primary bg-transparent  text-[40px] border-4 border-primary rounded-full hover:bg-primary hover:text-white",
         className
       )}
       disabled={disabled}
     >
-      <span className=" text-inherit ">{label}</span>
+      <span className="text-inherit">{label}</span>
     </button>
   );
 };
