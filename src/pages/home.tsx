@@ -8,7 +8,7 @@ export const HomeScreen: React.FC = () => {
   return (
     <div className="flex flex-col justify-center items-center gap-10 h-full w-full">
       <img
-        src="/images/little_logo.png"
+        src="/images/transparent-logo.png"
         alt="logo"
         className="w-[350px] h-auto -mb-10"
       />
