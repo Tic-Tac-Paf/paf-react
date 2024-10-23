@@ -12,7 +12,7 @@ export const WssProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [ws, setWs] = useState<WebSocket | null>(null);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://paf-api.onrender.com");
+    const socket = new WebSocket("wss://paf-api.onrender.com");
 
     socket.onopen = () => {
       console.log("Connected to the server");
