@@ -4,10 +4,13 @@ import UserIcon from "../assets/img/user-icon";
 import { useNavigate } from "react-router-dom";
 import { TextInput } from "../core/ui/form-inputs";
 import { useWebSocket } from "../core/providers/wss-provider";
+import { useApp } from "../core/providers/app-provider";
 
 export const JoinScreen: React.FC = () => {
   const navigate = useNavigate();
   const ws = useWebSocket(); // Récupérer la connexion WebSocket depuis le contexte
+  const { adminId } = useApp();
+
   const [name, setName] = useState("");
   const [accessCode, setAccessCode] = useState("");
 
@@ -33,8 +36,6 @@ export const JoinScreen: React.FC = () => {
       return alert("Veuillez remplir tous les champs");
     }
 
-    const playerId = localStorage.getItem("playerId");
-
     if (ws) {
       // Envoyer la demande de rejoindre la room via WebSocket
       ws.send(
@@ -42,7 +43,7 @@ export const JoinScreen: React.FC = () => {
           type: "joinRoom",
           roomCode: accessCode,
           username: name,
-          playerId,
+          playerId: adminId,
         })
       );
     } else {

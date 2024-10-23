@@ -3,8 +3,10 @@ import { OutlinedButton } from "../core/ui/buttons";
 import UserIcon from "../assets/img/user-icon";
 import { useNavigate } from "react-router-dom";
 import { SelectInput, SelectOption, TextInput } from "../core/ui/form-inputs";
-// import { useCreateRoom } from "../core/api/use-create-room";
 import { useWebSocket } from "../core/providers/wss-provider";
+
+import { ToastContainer, toast } from "react-toastify";
+import { useApp } from "../core/providers/app-provider";
 
 const gameModes: SelectOption[] = [
   {
@@ -13,21 +15,21 @@ const gameModes: SelectOption[] = [
   },
   {
     label: "Trouver le bon mot",
-    value: "findWorld",
+    value: "findWord",
   },
   {
     label: "Ecrire des mots",
-    value: "WriteWords",
+    value: "writeWord",
   },
 ];
 
 export const CreateScreen: React.FC = () => {
   const navigate = useNavigate();
   const ws = useWebSocket(); // Utilisation du WebSocket via le Provider
+  const { adminId } = useApp();
 
   const [name, setName] = useState("");
   const [gameMode, setGameMode] = useState("");
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (ws) {
@@ -36,9 +38,8 @@ export const CreateScreen: React.FC = () => {
 
         if (data.type === "roomCreated") {
           localStorage.setItem("playerId", data.playerId);
-          navigate(`/waiting-room/${data.room.code}`);
-        } else if (data.type === "roomNotFound") {
-          setMessage("Room not found");
+          localStorage.setItem("roomCode", data.room.code);
+          navigate(`/waiting-room`);
         }
       };
     }
@@ -46,22 +47,20 @@ export const CreateScreen: React.FC = () => {
 
   const handleCreateRoom = useCallback(() => {
     if (!name || !gameMode) {
-      return alert("Veuillez remplir tous les champs");
+      return toast.error("Veuillez remplir tous les champs");
     }
 
     if (ws) {
-      const playerId = localStorage.getItem("playerId") || "1";
-
       ws.send(
         JSON.stringify({
           type: "createRoom",
           username: name,
           gameMode: gameMode,
-          playerId,
+          playerId: adminId,
         })
       );
     }
-  }, [name, gameMode, ws]);
+  }, [name, gameMode, ws, adminId]);
 
   return (
     <div className="flex flex-col justify-center items-center gap-10 h-full w-full mx-auto">
@@ -83,7 +82,9 @@ export const CreateScreen: React.FC = () => {
 
       <OutlinedButton label="Créer la room" onClick={handleCreateRoom} />
 
-      <p>{message}</p>
+      <div className="absolute">
+        <ToastContainer />
+      </div>
     </div>
   );
 };
