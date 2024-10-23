@@ -4,13 +4,15 @@ import { Question, Room } from "../core/types/room";
 import { ToastContainer, toast } from "react-toastify";
 import { Lobby } from "../core/components/waiting-room/lobby";
 import { SelectQuestions } from "../core/components/waiting-room/select-questions";
-import { useApp } from "../core/providers/app-provider";
+import { useApp } from "../core/hook/use-app";
+import { useWebSocket } from "../core/hook/use-wss";
 
 type WaitingRoomSteps = "lobby" | "game";
 
 export const WaitingRoomScreen: React.FC = () => {
   // const navigate = useNavigate();
   const { roomCode, adminId } = useApp();
+  const { ws, isConnected } = useWebSocket();
 
   const [step, setStep] = useState<WaitingRoomSteps>("lobby");
 
@@ -19,48 +21,49 @@ export const WaitingRoomScreen: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
 
   useEffect(() => {
-    const ws = new WebSocket("wss://paf-api.onrender.com");
-
-    if (ws && roomCode) {
-      ws.onopen = () => {
-        ws.send(JSON.stringify({ type: "getRoomInfo", roomCode }));
-      };
+    if (ws && roomCode && isConnected) {
+      console.log({ type: "getRoomInfo", roomCode });
+      ws.send(JSON.stringify({ type: "getRoomInfo", roomCode }));
 
       ws.onmessage = (event: MessageEvent) => {
         const data = JSON.parse(event.data);
 
         if (data.type === "roomInfo" && data.room.code === roomCode) {
           setRoom(data.room);
+          console.log(data.room.admin.id);
+          console.log(adminId);
           setIsAdmin(data.room.admin.id === adminId);
         } else if (data.type === "updatedRoom" && data.room.code === roomCode) {
           setRoom(data.room);
         }
       };
     }
-  }, [setIsAdmin, roomCode, adminId]);
+  }, [setIsAdmin, roomCode, adminId, ws, isConnected]);
 
   const handleStartQuestions = () => {
     if (room?.players && room?.players?.length < 2) {
       return toast.error("Il faut au moins 2 joueurs pour lancer la partie");
     }
-
-    const ws = new WebSocket("wss://paf-api.onrender.com");
-
-    ws.onopen = () => {
+    if (ws) {
+      console.log({ type: "getQuestionsForRoom", roomCode, adminId });
       ws.send(
-        JSON.stringify({ type: "getQuestionsForRoom", roomCode, adminId })
+        JSON.stringify({
+          type: "getQuestionsForRoom",
+          roomCode,
+          adminId,
+        })
       );
-    };
 
-    ws.onmessage = (event: MessageEvent) => {
-      const data = JSON.parse(event.data);
+      ws.onmessage = (event: MessageEvent) => {
+        const data = JSON.parse(event.data);
 
-      if (data.type === "questions" && data.roomCode === roomCode) {
-        console.log(data.questions);
-        setQuestions(data.questions);
-        setStep("game");
-      }
-    };
+        if (data.type === "questions" && data.roomCode === roomCode) {
+          console.log(data.questions);
+          setQuestions(data.questions);
+          setStep("game");
+        }
+      };
+    }
   };
 
   return (

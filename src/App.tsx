@@ -1,8 +1,7 @@
-import { AppProvider } from "./core/providers/app-provider";
-import { WssProvider } from "./core/providers/wss-provider";
 import Router from "./router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "react-toastify/dist/ReactToastify.css";
+import { WebSocketProvider } from "./core/hook/use-wss";
 
 const client = new QueryClient({
   defaultOptions: {
@@ -14,13 +13,11 @@ const client = new QueryClient({
 
 function App() {
   return (
-    <AppProvider>
-      <WssProvider>
-        <QueryClientProvider client={client}>
-          <Router />;
-        </QueryClientProvider>
-      </WssProvider>
-    </AppProvider>
+    <WebSocketProvider>
+      <QueryClientProvider client={client}>
+        <Router />;
+      </QueryClientProvider>
+    </WebSocketProvider>
   );
 }
 

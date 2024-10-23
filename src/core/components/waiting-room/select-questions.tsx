@@ -1,12 +1,12 @@
 import classNames from "classnames";
 import { OutlinedButton } from "../../ui/buttons";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Question } from "../../types/room";
 
 export const SelectQuestions: React.FC<{
   questions: Question[];
   onNext: (_value?: Question) => void;
-}> = ({ questions, onNext }) => {
+}> = ({ questions }) => {
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<
     number | null
   >(null);
@@ -34,7 +34,7 @@ export const SelectQuestions: React.FC<{
       </div>
 
       {/* slider of 20 secondes */}
-      <ProgressSlider duration={10} questions={questions} onNext={onNext} />
+      {/* <ProgressSlider duration={10} questions={questions} onNext={onNext} /> */}
     </div>
   );
 };
@@ -100,59 +100,59 @@ const QuestionItem: React.FC<{
   );
 };
 
-const ProgressSlider: React.FC<{
-  duration: number;
-  questions: Question[];
-  onNext: (_value?: Question) => void;
-}> = ({ duration, questions, onNext }) => {
-  const [progress, setProgress] = useState(0);
-  const [startTime, setStartTime] = useState<number | null>(null);
+// const ProgressSlider: React.FC<{
+//   duration: number;
+//   questions: Question[];
+//   onNext: (_value?: Question) => void;
+// }> = ({ duration, questions, onNext }) => {
+//   const [progress, setProgress] = useState(0);
+//   const [startTime, setStartTime] = useState<number | null>(null);
 
-  useEffect(() => {
-    let animationFrameId: number;
+//   useEffect(() => {
+//     let animationFrameId: number;
 
-    const animate = (timestamp: number) => {
-      if (!startTime) {
-        setStartTime(timestamp);
-        return;
-      }
+//     const animate = (timestamp: number) => {
+//       if (!startTime) {
+//         setStartTime(timestamp);
+//         return;
+//       }
 
-      const elapsed = timestamp - startTime;
-      const newProgress = Math.min((elapsed / (duration * 1000)) * 100, 100);
+//       const elapsed = timestamp - startTime;
+//       const newProgress = Math.min((elapsed / (duration * 1000)) * 100, 100);
 
-      setProgress(newProgress);
+//       setProgress(newProgress);
 
-      if (newProgress < 100) {
-        animationFrameId = requestAnimationFrame(animate);
-      } else {
-        alertMostVotedQuestion();
-      }
-    };
+//       if (newProgress < 100) {
+//         animationFrameId = requestAnimationFrame(animate);
+//       } else {
+//         alertMostVotedQuestion();
+//       }
+//     };
 
-    animationFrameId = requestAnimationFrame(animate);
+//     animationFrameId = requestAnimationFrame(animate);
 
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [duration, startTime]);
+//     return () => cancelAnimationFrame(animationFrameId);
+//   }, [duration, startTime]);
 
-  const alertMostVotedQuestion = () => {
-    const maxVotes = Math.max(...questions.map((q) => q.vote));
-    const topQuestions = questions.filter((q) => q.vote === maxVotes);
+//   const alertMostVotedQuestion = () => {
+//     const maxVotes = Math.max(...questions.map((q) => q.vote));
+//     const topQuestions = questions.filter((q) => q.vote === maxVotes);
 
-    const randomQuestion =
-      topQuestions[Math.floor(Math.random() * topQuestions.length)];
+//     const randomQuestion =
+//       topQuestions[Math.floor(Math.random() * topQuestions.length)];
 
-    console.log(randomQuestion);
-    // send question to websocket
+//     console.log(randomQuestion);
+//     // send question to websocket
 
-    onNext(randomQuestion);
-  };
+//     onNext(randomQuestion);
+//   };
 
-  return (
-    <div className="w-[90%] h-[50px] bg-gray-200 border-2 border-primary rounded-full overflow-hidden">
-      <div
-        className="h-full bg-primary rounded-l-full transition-all"
-        style={{ width: `${progress}%` }}
-      />
-    </div>
-  );
-};
+//   return (
+//     <div className="w-[90%] h-[50px] bg-gray-200 border-2 border-primary rounded-full overflow-hidden">
+//       <div
+//         className="h-full bg-primary rounded-l-full transition-all"
+//         style={{ width: `${progress}%` }}
+//       />
+//     </div>
+//   );
+// };

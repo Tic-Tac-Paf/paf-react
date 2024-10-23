@@ -4,7 +4,8 @@ import { SelectInput, SelectOption, TextInput } from "../../ui/form-inputs";
 import { Player, Room } from "../../types/room";
 import { OutlinedButton } from "../../ui/buttons";
 import UserIcon from "../../../assets/img/user-icon";
-import { useApp } from "../../providers/app-provider";
+import { useApp } from "../../hook/use-app";
+import { useWebSocket } from "../../hook/use-wss";
 
 const difficulties: SelectOption[] = [
   { label: "Facile", value: "easy" },
@@ -18,11 +19,10 @@ export const Lobby: React.FC<{
   onNext: () => void;
 }> = ({ room, isAdmin, onNext }) => {
   const { roomCode, adminId } = useApp();
+  const { ws } = useWebSocket();
 
   const handleUpdateRoom = useCallback(
     (key: "rounds" | "difficulty", value: string | number) => {
-      const ws = new WebSocket("wss://paf-api.onrender.com");
-
       if (typeof value === "number") {
         if (value < 1 || value > 10) {
           return toast.error(
@@ -32,20 +32,21 @@ export const Lobby: React.FC<{
       }
 
       if (ws) {
-        ws.onopen = () => {
-          ws.send(
-            JSON.stringify({
-              type: "updateRoomInfo",
-              roomCode,
-              playerId: adminId,
-              key,
-              value,
-            })
-          );
-        };
+        console.log({ type: "updateRoomInfo", roomCode, adminId, key, value });
+
+        ws.send(
+          JSON.stringify({
+            type: "updateRoomInfo",
+            roomCode,
+            adminId,
+            key,
+            value,
+          })
+        );
       }
     },
-    [roomCode, adminId]
+
+    [roomCode, adminId, ws]
   );
 
   return (

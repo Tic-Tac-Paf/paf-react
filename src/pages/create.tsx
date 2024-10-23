@@ -3,10 +3,10 @@ import { OutlinedButton } from "../core/ui/buttons";
 import UserIcon from "../assets/img/user-icon";
 import { useNavigate } from "react-router-dom";
 import { SelectInput, SelectOption, TextInput } from "../core/ui/form-inputs";
-import { useWebSocket } from "../core/providers/wss-provider";
+import { useWebSocket } from "../core/hook/use-wss";
 
 import { ToastContainer, toast } from "react-toastify";
-import { useApp } from "../core/providers/app-provider";
+import { useApp } from "../core/hook/use-app";
 
 const gameModes: SelectOption[] = [
   {
@@ -25,13 +25,16 @@ const gameModes: SelectOption[] = [
 
 export const CreateScreen: React.FC = () => {
   const navigate = useNavigate();
-  const ws = useWebSocket(); // Utilisation du WebSocket via le Provider
+  const { ws } = useWebSocket(); // Utilisation du WebSocket via le Provider
   const { adminId } = useApp();
 
   const [name, setName] = useState("");
   const [gameMode, setGameMode] = useState("");
 
   useEffect(() => {
+    localStorage.removeItem("roomCode");
+    localStorage.removeItem("playerId");
+
     if (ws) {
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);

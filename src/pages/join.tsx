@@ -3,18 +3,20 @@ import { OutlinedButton } from "../core/ui/buttons";
 import UserIcon from "../assets/img/user-icon";
 import { useNavigate } from "react-router-dom";
 import { TextInput } from "../core/ui/form-inputs";
-import { useWebSocket } from "../core/providers/wss-provider";
-import { useApp } from "../core/providers/app-provider";
+import { useWebSocket } from "../core/hook/use-wss";
+import { useApp } from "../core/hook/use-app";
 
 export const JoinScreen: React.FC = () => {
   const navigate = useNavigate();
-  const ws = useWebSocket(); // Récupérer la connexion WebSocket depuis le contexte
+  const { ws } = useWebSocket(); // Récupérer la connexion WebSocket depuis le contexte
   const { adminId } = useApp();
 
   const [name, setName] = useState("");
   const [accessCode, setAccessCode] = useState("");
 
   useEffect(() => {
+    localStorage.removeItem("roomCode");
+
     if (!ws) return;
 
     // Ecouter les messages pour confirmer la connexion à la room
@@ -44,7 +46,7 @@ export const JoinScreen: React.FC = () => {
           type: "joinRoom",
           roomCode: accessCode,
           username: name,
-          playerId: adminId,
+          adminId,
         })
       );
     } else {
