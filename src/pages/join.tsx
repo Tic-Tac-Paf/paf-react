@@ -24,7 +24,8 @@ export const JoinScreen: React.FC = () => {
 
       if (data.type === "roomJoined" && data.room.code === accessCode) {
         localStorage.setItem("playerId", data.playerId);
-        navigate(`/waiting-room/${accessCode}`);
+        localStorage.setItem("roomCode", data.room.code);
+        navigate(`/waiting-room`);
       } else if (data.type === "error") {
         alert(data.message); // Afficher l'erreur reçue depuis le serveur
       }
