@@ -24,13 +24,13 @@ export const ValideAnswers: React.FC<{
 
       {/* Question et réponse */}
       <div className="flex flex-col items-center text-center gap-4">
+        <p className="text-2xl font-light font-inter">{question.question}</p>
         <p className="text-3xl italic font-inter font-semibold">
-          {question.question}
+          {question.answer}
         </p>
-        <p className="text-2xl font-light font-inter">{question.answer}</p>
       </div>
 
-      <div className="w-full flex flex-col items-center gap-8 overflow-y-auto">
+      <div className="w-full flex flex-col items-center gap-8 mb-8 overflow-y-auto">
         {groupedAnswers.map((group, groupIndex) => (
           <div
             key={groupIndex}
