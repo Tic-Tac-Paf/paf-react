@@ -39,8 +39,10 @@ export const CreateScreen: React.FC = () => {
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
 
+        console.log({ data });
+
         if (data.type === "roomCreated") {
-          localStorage.setItem("playerId", data.playerId);
+          localStorage.setItem("playerId", data.additionalData.playerId);
           localStorage.setItem("roomCode", data.room.code);
           navigate(`/waiting-room`);
         }

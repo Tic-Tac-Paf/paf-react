@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 
 export const WaitingAnswers: React.FC<{
   onNext: () => void;
-}> = ({ onNext }) => {
+  currentRound: number;
+}> = ({ onNext, currentRound }) => {
   return (
     <div className="flex flex-col justify-evenly items-center gap-10 h-full w-full">
-      <h2 className="text-[80px] ">Round 1 :</h2>
+      <h2 className="text-[80px] ">Round {currentRound} :</h2>
 
       <ProgressSlider duration={20} onNext={onNext} />
       <h2 className="text-5xl text-center w-[40%] ">

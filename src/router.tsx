@@ -5,7 +5,7 @@ import { JoinScreen } from "./pages/join";
 import { CreateScreen } from "./pages/create";
 import { DefaultLayout } from "./core/layout/default-layout";
 import { WaitingRoomScreen } from "./pages/waiting-room";
-import { RoomScreen } from "./pages/room";
+import { GameScreen } from "./pages/game";
 import { TestScreen } from "./pages/test";
 
 const Router: React.FC = () => {
@@ -17,7 +17,7 @@ const Router: React.FC = () => {
           <Route path="/create" element={<CreateScreen />} />
           <Route path="/join" element={<JoinScreen />} />
           <Route path="/waiting-room" element={<WaitingRoomScreen />} />
-          <Route path="/room" element={<RoomScreen />} />
+          <Route path="/game" element={<GameScreen />} />
           <Route path="/test" element={<TestScreen />} />
         </Routes>
       </BrowserRouter>

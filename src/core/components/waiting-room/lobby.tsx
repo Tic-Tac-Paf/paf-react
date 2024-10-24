@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { SelectInput, SelectOption, TextInput } from "../../ui/form-inputs";
 import { Player, Room } from "../../types/room";
@@ -20,6 +20,13 @@ export const Lobby: React.FC<{
 }> = ({ room, isAdmin, onNext }) => {
   const { roomCode, adminId } = useApp();
   const { ws } = useWebSocket();
+
+  const totalRounds = room?.rounds;
+
+  const isReady = useMemo(() => {
+    console.log("isready : ", room?.questions?.length, totalRounds);
+    return room?.questions?.length === totalRounds;
+  }, [room, totalRounds]);
 
   const handleUpdateRoom = useCallback(
     (key: "rounds" | "difficulty", value: string | number) => {
@@ -60,7 +67,7 @@ export const Lobby: React.FC<{
         <div className="flex flex-col items-center justify-center gap-14 max-w-[90%] ml-auto bg-white/70 p-5 rounded-lg w-full">
           <div className="flex justify-between items-center text-left w-full">
             <p className="text-[34px] w-full">Difficulté :</p>
-            {isAdmin ? (
+            {isAdmin && !isReady ? (
               <SelectInput
                 options={difficulties}
                 value={room?.difficulty}
@@ -76,7 +83,7 @@ export const Lobby: React.FC<{
           {/* Nombre de rounds */}
           <div className="flex justify-between items-center text-center w-full">
             <p className="text-[34px]">Nombre de rounds :</p>
-            {isAdmin ? (
+            {isAdmin && !isReady ? (
               <TextInput
                 type="number"
                 value={room?.rounds}
@@ -118,7 +125,10 @@ export const Lobby: React.FC<{
       </div>
 
       {isAdmin ? (
-        <OutlinedButton label="Lancer la partie" onClick={onNext} />
+        <OutlinedButton
+          label={isReady ? "Lancer la partie" : "Choix des questions"}
+          onClick={onNext}
+        />
       ) : (
         <div />
       )}

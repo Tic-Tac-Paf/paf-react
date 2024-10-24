@@ -25,7 +25,7 @@ export const JoinScreen: React.FC = () => {
       console.log("Message reçu", data);
 
       if (data.type === "roomJoined" && data.room.code === accessCode) {
-        localStorage.setItem("playerId", data.playerId);
+        localStorage.setItem("playerId", data.data.playerId);
         localStorage.setItem("roomCode", data.room.code);
         navigate(`/waiting-room`);
       } else if (data.type === "error") {

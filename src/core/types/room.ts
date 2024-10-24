@@ -7,10 +7,12 @@ export interface Answer {
 }
 
 export interface Question {
+  _id: string;
   question: string;
   answer: string;
-  vote: number;
 }
+
+export type RoundQuestions = Question[][];
 
 export interface Room {
   code: { type: string; unique: true };
@@ -22,6 +24,8 @@ export interface Room {
   gameMode: string;
   difficulty: string;
   rounds: number;
+  questions: Question[];
+  currentRound: number;
 }
 
 export interface Player {
