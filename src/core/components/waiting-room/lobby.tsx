@@ -24,7 +24,6 @@ export const Lobby: React.FC<{
   const totalRounds = room?.rounds;
 
   const isReady = useMemo(() => {
-    console.log("isready : ", room?.questions?.length, totalRounds);
     return room?.questions?.length === totalRounds;
   }, [room, totalRounds]);
 
@@ -39,7 +38,7 @@ export const Lobby: React.FC<{
       }
 
       if (ws) {
-        console.log({ type: "updateRoomInfo", roomCode, adminId, key, value });
+        console.log("updateRoom");
 
         ws.send(
           JSON.stringify({

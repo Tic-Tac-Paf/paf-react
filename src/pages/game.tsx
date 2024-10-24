@@ -17,12 +17,7 @@ export const GameScreen: React.FC = () => {
   const [answers, setAnswers] = useState([]);
 
   useEffect(() => {
-    console.log({ room });
-  }, [room]);
-
-  useEffect(() => {
     if (ws && roomCode && isConnected) {
-      console.log({ type: "getRoomInfo", roomCode });
       ws.send(JSON.stringify({ type: "getRoomInfo", roomCode }));
 
       ws.onmessage = (event: MessageEvent) => {

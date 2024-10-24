@@ -22,10 +22,9 @@ export const JoinScreen: React.FC = () => {
     // Ecouter les messages pour confirmer la connexion à la room
     ws.onmessage = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
-      console.log("Message reçu", data);
 
-      if (data.type === "roomJoined" && data.room.code === accessCode) {
-        localStorage.setItem("playerId", data.data.playerId);
+      if (data.type === "userJoinedRoom" && data.room.code === accessCode) {
+        localStorage.setItem("playerId", data.playerId);
         localStorage.setItem("roomCode", data.room.code);
         navigate(`/waiting-room`);
       } else if (data.type === "error") {
@@ -40,13 +39,19 @@ export const JoinScreen: React.FC = () => {
     }
 
     if (ws) {
-      // Envoyer la demande de rejoindre la room via WebSocket
+      console.log({
+        type: "joinRoom",
+        roomCode: accessCode,
+        username: name,
+        playerId: adminId,
+      });
+
       ws.send(
         JSON.stringify({
           type: "joinRoom",
           roomCode: accessCode,
           username: name,
-          adminId,
+          playerId: adminId,
         })
       );
     } else {

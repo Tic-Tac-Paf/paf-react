@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { UserItem } from "../../../pages/waiting-room";
 import { useWebSocket } from "../../hook/use-wss";
 import { useApp } from "../../hook/use-app";
+import { OutlinedButton } from "../../ui/buttons";
 
 interface Answer {
   type: string;
@@ -26,8 +27,6 @@ export const ValideAnswers: React.FC<{
 }> = () => {
   const [playersAnswers, setPlayersAnswers] = useState<Answer | null>(null);
 
-  console.log({ playersAnswers });
-
   const { ws, isConnected } = useWebSocket();
   const { roomCode, adminId } = useApp();
 
@@ -43,9 +42,7 @@ export const ValideAnswers: React.FC<{
 
       ws.onmessage = (event: MessageEvent) => {
         const data = JSON.parse(event.data);
-        console.log("Message reçu", data);
         if (data.type === "roundResults") {
-          console.log("roundResults", data);
           setPlayersAnswers(data);
         }
       };
@@ -65,6 +62,54 @@ export const ValideAnswers: React.FC<{
 
   //   // Diviser les réponses en groupes de 3
   //   const groupedAnswers = chunkAnswers(playersAnswers, 3);
+
+  const handleValidate = useCallback(
+    (playerId: string, validated: boolean) => {
+      if (ws) {
+        ws.send(
+          JSON.stringify({
+            type: "validateWord",
+            validated,
+            playerId,
+            adminId,
+            roomCode,
+          })
+        );
+
+        console.log("Message envoyé", {
+          type: "validateWord",
+          validated,
+          playerId,
+          adminId,
+          roomCode,
+        });
+
+        ws.onmessage = (event: MessageEvent) => {
+          const data = JSON.parse(event.data);
+          console.log("Message reçu", data);
+        };
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [adminId, roomCode]
+  );
+
+  const handleNextRound = useCallback(() => {
+    if (ws) {
+      ws.send(
+        JSON.stringify({
+          type: "nextRound",
+          adminId,
+          roomCode,
+        })
+      );
+
+      ws.onmessage = (event: MessageEvent) => {
+        const data = JSON.parse(event.data);
+        console.log("Message reçu", data);
+      };
+    }
+  }, [adminId, roomCode, ws]);
 
   return (
     <div className="flex flex-col items-center justify-center gap-8 mt-10 w-full px-6 ">
@@ -95,13 +140,13 @@ export const ValideAnswers: React.FC<{
             <div className="flex gap-4 mt-2">
               <button
                 className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition"
-                onClick={() => handleValidate("Theo", answer.username)}
+                onClick={() => handleValidate(answer.playerId, true)}
               >
                 O
               </button>
               <button
                 className="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition"
-                onClick={() => handleInvalidate("Theo", answer.username)}
+                onClick={() => handleValidate(answer.playerId, false)}
               >
                 X
               </button>
@@ -109,15 +154,8 @@ export const ValideAnswers: React.FC<{
           </div>
         ))}
       </div>
+
+      <OutlinedButton label="Prochain round" onClick={handleNextRound} />
     </div>
   );
-};
-
-// Placeholder functions to handle button clicks
-const handleValidate = (admin: string, answerName: string) => {
-  console.log(`${admin} a validé la réponse de ${answerName}`);
-};
-
-const handleInvalidate = (admin: string, answerName: string) => {
-  console.log(`${admin} a invalidé la réponse de ${answerName}`);
 };

@@ -6,7 +6,6 @@ import { CreateScreen } from "./pages/create";
 import { DefaultLayout } from "./core/layout/default-layout";
 import { WaitingRoomScreen } from "./pages/waiting-room";
 import { GameScreen } from "./pages/game";
-import { TestScreen } from "./pages/test";
 
 const Router: React.FC = () => {
   return (
@@ -18,7 +17,6 @@ const Router: React.FC = () => {
           <Route path="/join" element={<JoinScreen />} />
           <Route path="/waiting-room" element={<WaitingRoomScreen />} />
           <Route path="/game" element={<GameScreen />} />
-          <Route path="/test" element={<TestScreen />} />
         </Routes>
       </BrowserRouter>
     </DefaultLayout>

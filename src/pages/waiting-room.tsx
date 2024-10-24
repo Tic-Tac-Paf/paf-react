@@ -6,6 +6,7 @@ import { SelectQuestions } from "../core/components/waiting-room/select-question
 import { useApp } from "../core/hook/use-app";
 import { useWebSocket } from "../core/hook/use-wss";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 type WaitingRoomSteps = "lobby" | "game";
 
@@ -24,19 +25,22 @@ export const WaitingRoomScreen: React.FC = () => {
 
   useEffect(() => {
     if (ws && roomCode && isConnected) {
-      console.log({ type: "getRoomInfo", roomCode });
       ws.send(JSON.stringify({ type: "getRoomInfo", roomCode }));
 
       ws.onmessage = (event: MessageEvent) => {
         const data = JSON.parse(event.data);
 
+        console.log("Message reçu", data);
+
         if (data.type === "roomInfo" && data.room.code === roomCode) {
           setRoom(data.room);
           setIsAdmin(data.room.admin.id === adminId);
-          console.log(data.room.rounds);
-        } else if (data.type === "updatedRoom" && data.room.code === roomCode) {
+        } else if (
+          (data.type === "updatedRoom" || data.type === "userJoinedRoom") &&
+          data.room.code === roomCode
+        ) {
           setRoom(data.room);
-          console.log("updated");
+
           setTotalRounds(data.room.rounds);
         }
       };
@@ -44,12 +48,10 @@ export const WaitingRoomScreen: React.FC = () => {
   }, [setIsAdmin, roomCode, adminId, ws, isConnected]);
 
   const handleStartQuestions = () => {
-    // if (room?.players && room?.players?.length < 2) {
-    //   return toast.error("Il faut au moins 2 joueurs pour lancer la partie");
-    // }
+    if (room?.players && room?.players?.length < 2) {
+      return toast.error("Il faut au moins 2 joueurs pour lancer la partie");
+    }
     if (ws) {
-      console.log({ type: "getQuestionsForRoom", roomCode, adminId });
-
       if (room?.questions?.length === totalRounds) {
         ws.send(
           JSON.stringify({
@@ -83,11 +85,9 @@ export const WaitingRoomScreen: React.FC = () => {
   };
 
   const handleNextRound = (selectedQuestion?: string[]) => {
-    console.log({ round, totalRounds });
     if (round < totalRounds) {
       setRound((prevRound) => prevRound + 1); // Passe au round suivant
     } else {
-      console.log("Le jeu est terminé !");
       if (ws) {
         ws.send(
           JSON.stringify({
@@ -123,6 +123,8 @@ export const WaitingRoomScreen: React.FC = () => {
           room={room as Room}
         />
       )}
+
+      <ToastContainer />
     </>
   );
 };
