@@ -56,21 +56,22 @@ export const Lobby: React.FC<{
   );
 
   return (
-    <div className="flex flex-col justify-evenly items-center gap-10 h-full w-full">
-      <p className="text-[30px] flex items-center gap-3">
-        Code d'accès : <span className="text-[45px] ">{roomCode}</span>
+    <div className="flex flex-col justify-evenly items-center gap-10 md:h-full w-full my-5 md:my-0">
+      <p className="text-[30px] flex flex-col md:flex-row items-center md:gap-3 ">
+        Code d'accès : <span className="text-[45px]">{roomCode}</span>
       </p>
 
-      <div className="w-full grid grid-cols-[1fr_1px_1fr] gap-10 ">
+      <div className="w-full grid mx-auto md:grid-cols-[1fr_1px_1fr] gap-10 ">
         {/* Bloc pour la difficulté et le nombre de rounds */}
-        <div className="flex flex-col items-center justify-center gap-14 max-w-[90%] ml-auto bg-white/70 p-5 rounded-lg w-full">
+        <div className="flex flex-col items-center justify-center gap-14 max-w-[90%] mx-auto md:ml-auto bg-white/70 p-5 rounded-lg w-full">
           <div className="flex justify-between items-center text-left w-full">
-            <p className="text-[34px] w-full">Difficulté :</p>
+            <p className="text-[24px] md:text-[34px] w-full">Difficulté :</p>
             {isAdmin && !isReady ? (
               <SelectInput
                 options={difficulties}
                 value={room?.difficulty}
                 onChange={(e) => handleUpdateRoom("difficulty", e.target.value)}
+                className="w-[200px] h-[50px] text-[20px] md:text-[24px] text-center"
               />
             ) : (
               <p className="text-[24px]">
@@ -80,8 +81,8 @@ export const Lobby: React.FC<{
           </div>
 
           {/* Nombre de rounds */}
-          <div className="flex justify-between items-center text-center w-full">
-            <p className="text-[34px]">Nombre de rounds :</p>
+          <div className="flex justify-between items-center text-left w-full ">
+            <p className="text-[24px] md:text-[34px]">Nombre de rounds :</p>
             {isAdmin && !isReady ? (
               <TextInput
                 type="number"
@@ -91,7 +92,7 @@ export const Lobby: React.FC<{
                 }
                 min={1}
                 max={10}
-                className="w-[100px] h-[50px] text-[24px] text-center"
+                className="w-[100px] h-[50px] text-[20px] md:text-[24px] text-center"
               />
             ) : (
               <p className="text-[24px]">{room?.rounds}</p>
@@ -100,18 +101,18 @@ export const Lobby: React.FC<{
 
           {/* Admin */}
           <div className="text-center flex items-center justify-between gap-5 w-full">
-            <p className="text-[34px]">Admin :</p>
+            <p className="text-[24px] md:text-[34px]">Admin :</p>
             <div className="grid items-center justify-center gap-10">
               <UserItem name={room?.admin?.username} />
             </div>
           </div>
         </div>
 
-        <div className="h-full w-[1px] bg-black" />
+        <div className="w-[90%] mx-auto md:h-full h-[1px] md:w-[1px] bg-black" />
 
         {/* Liste des participants */}
-        <div className="flex flex-col items-center justify-center text-center gap-10 max-w-[90%] bg-white/70 p-5 rounded-lg">
-          <p className="text-[34px]">
+        <div className="flex flex-col items-center justify-center text-center gap-10 max-w-[90%] w-full mx-auto bg-white/70 p-5 rounded-lg">
+          <p className="text-[24px] md:text-[34px]">
             Participants : {room?.players?.length}/8
           </p>
 
@@ -143,7 +144,7 @@ export const UserItem: React.FC<{ name?: string }> = ({ name }) => {
   return (
     <div className="flex flex-col items-center justify-center">
       <UserIcon className="w-[60px] h-[60px]" />
-      <p className="text-[24px]">{name}</p>
+      <p className="text-[18px] md:text-[24px]">{name}</p>
     </div>
   );
 };

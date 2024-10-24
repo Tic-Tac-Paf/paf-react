@@ -47,21 +47,7 @@ export const ValideAnswers: React.FC<{
         }
       };
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomCode, adminId, isConnected, ws]);
-
-  //   const chunkAnswers = (arr: typeof playersAnswers, chunkSize: number) => {
-  //     // Fonction pour diviser les réponses en sous-groupes
-  //     return arr.reduce((acc, _, index) => {
-  //       if (index % chunkSize === 0) {
-  //         acc.push(arr.slice(index, index + chunkSize));
-  //       }
-  //       return acc;
-  //     }, [] as (typeof playersAnswers)[]);
-  //   };
-
-  //   // Diviser les réponses en groupes de 3
-  //   const groupedAnswers = chunkAnswers(playersAnswers, 3);
 
   const handleValidate = useCallback(
     (playerId: string, validated: boolean) => {

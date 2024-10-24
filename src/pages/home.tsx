@@ -13,7 +13,7 @@ export const HomeScreen: React.FC = () => {
         className="w-[350px] h-auto -mb-10"
       />
 
-      <h1 className="text-[96px]">Tic Tac Paf</h1>
+      <h1 className="text-[96px] text-center leading-[80px]">Tic Tac Paf</h1>
 
       <div className="flex items-center justify-center gap-10 ">
         <OutlinedButton

@@ -23,9 +23,9 @@ export const SelectQuestions: React.FC<{
   );
 
   return (
-    <div className="flex flex-col justify-evenly items-center gap-10 h-full w-full">
-      <h2 className="text-3xl ">Round {round} :</h2>
-      <div className="grid grid-cols-[400px_400px_400px] gap-10">
+    <div className="flex flex-col justify-center md:justify-center items-center gap-10 md:gap-16 h-full w-full">
+      <h2 className="text-[80px]">Round {round} :</h2>
+      <div className="grid md:grid-cols-[400px_400px_400px] gap-10">
         {questions.map((q, index) => (
           <QuestionItem
             key={index}
@@ -54,17 +54,19 @@ const QuestionItem: React.FC<{
       className={classNames(
         "relative flex flex-col justify-center items-center gap-4 cursor-pointer",
         {
-          "mb-40": index === 0 || index === 2,
-          "mt-40": index === 1,
+          "md:mb-40": index === 0 || index === 2,
+          "md:mt-40": index === 1,
         }
       )}
     >
-      <div className="flex flex-col items-center justify-center text-center border-2 border-black bg-white rounded-[20px] w-full h-[200px] ">
-        <p className="text-[28px] italic font-inter font-semibold">
+      <div className="flex flex-col items-center justify-center text-center border-2 border-black bg-white hover:border-primary rounded-[20px] w-[90%] md:w-full h-[150px] md:h-[200px] ">
+        <p className="text-[20px] md:text-[24px] max-w-[75%] italic font-inter font-medium">
           {question.question}
         </p>
 
-        <p className="text-3xl font-light font-inter">{question.answer}</p>
+        <p className="text-2xl md:text-4xl font-bold font-inter">
+          {question.answer}
+        </p>
       </div>
     </div>
   );
