@@ -28,8 +28,8 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // const websocket = new WebSocket("wss://paf-api.onrender.com");
-    const websocket = new WebSocket("ws://localhost:3000");
+    const websocket = new WebSocket("wss://paf-api.onrender.com");
+    // const websocket = new WebSocket("ws://localhost:3000");
 
     websocket.onopen = () => {
       console.log("Connected to the server");

@@ -3,6 +3,7 @@ import { UserItem } from "../../../pages/waiting-room";
 import { useWebSocket } from "../../hook/use-wss";
 import { useApp } from "../../hook/use-app";
 import { OutlinedButton } from "../../ui/buttons";
+import classNames from "classnames";
 
 interface Result {
   word: string;
@@ -17,10 +18,8 @@ interface Answer {
   results: [
     {
       playerId: string;
-      word: {
-        word: string;
-        validated: boolean;
-      };
+      word: string;
+      validated: boolean;
       username: string;
     }
   ];
@@ -41,7 +40,7 @@ export const ValideAnswers: React.FC<{
       ws.send(
         JSON.stringify({
           type: "getRoundResults",
-          code: roomCode,
+          roomCode,
           adminId,
         })
       );
@@ -49,6 +48,7 @@ export const ValideAnswers: React.FC<{
       ws.onmessage = (event: MessageEvent) => {
         const data = JSON.parse(event.data);
 
+        console.log("Message : ", data);
         if (data.type === "roundResults") {
           return setPlayersAnswers(data);
         }
@@ -71,7 +71,16 @@ export const ValideAnswers: React.FC<{
 
         ws.onmessage = (event: MessageEvent) => {
           const data = JSON.parse(event.data);
+          console.log("Word validated", data);
           if (data.type === "wordValidated") {
+            // set players anwers results but keep question
+            setPlayersAnswers((prevAnswers) => {
+              if (!prevAnswers) return null;
+              return {
+                ...prevAnswers,
+                results: data.results,
+              };
+            });
             setAllValidated(
               Object.values(data.results).every(
                 (result) => "validated" in (result as Result)
@@ -107,19 +116,33 @@ export const ValideAnswers: React.FC<{
           >
             <UserItem name={answer.username} />
             <div className="border-2 border-black bg-white rounded-lg w-full h-16 flex items-center justify-center p-2">
-              <p className="text-lg font-inter">{answer.word.word}</p>
+              <p className="text-lg font-inter">{answer.word}</p>
             </div>
 
             {/* Boutons pour valider ou invalider la réponse */}
             <div className="flex gap-4 mt-2">
               <button
-                className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition"
+                className={classNames(
+                  "border w-[40px] h-[40px] flex items-center justify-center rounded-[10px] hover:bg-green-600 hover:text-white transition",
+                  {
+                    "border-green-500 bg-transparent text-green-500":
+                      answer.validated === false || !answer.validated,
+                    "bg-green-500 text-white": answer.validated === true,
+                  }
+                )}
                 onClick={() => handleValidate(answer.playerId, true)}
               >
                 O
               </button>
               <button
-                className="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition"
+                className={classNames(
+                  "border w-[40px] h-[40px] flex items-center justify-center rounded-[10px] hover:bg-red-600 hover:text-white transition",
+                  {
+                    "border-red-500 bg-transparent text-red-500":
+                      answer.validated === true || !answer.validated,
+                    "bg-red-500 text-white": answer.validated === false,
+                  }
+                )}
                 onClick={() => handleValidate(answer.playerId, false)}
               >
                 X
