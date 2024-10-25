@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { WaitingAnswers } from "../core/components/room/waiting-answers";
 import { ValideAnswers } from "../core/components/room/answer-screen";
 import { Room } from "../core/types/room";
 import { useWebSocket } from "../core/hook/use-wss";
 import { useApp } from "../core/hook/use-app";
+import { useNavigate } from "react-router-dom";
+import { GameOver } from "../core/components/room/game-over";
 
-export type GameSteps = "waiting" | "valide";
+export type GameSteps = "waiting" | "valide" | "results";
 
 export const GameScreen: React.FC = () => {
   const [step, setStep] = useState<GameSteps>("waiting");
   const [room, setRoom] = useState<Room | null>(null);
+  const naviguate = useNavigate();
 
   const { ws, isConnected } = useWebSocket();
   const { roomCode, adminId } = useApp();
@@ -22,6 +25,7 @@ export const GameScreen: React.FC = () => {
 
       ws.onmessage = (event: MessageEvent) => {
         const data = JSON.parse(event.data);
+        console.log("Message reçu", data);
 
         if (data.type === "roomInfo" && data.room.code === roomCode) {
           return setRoom(data.room);
@@ -36,11 +40,40 @@ export const GameScreen: React.FC = () => {
     }
   }, [roomCode, adminId, ws, isConnected]);
 
-  const handleNextStep = () => {
+  const handleNextStep = useCallback(() => {
     if (step === "waiting") {
       setStep("valide");
     }
-  };
+
+    if (step === "valide") {
+      if (ws && isConnected) {
+        ws.send(
+          JSON.stringify({
+            type: "nextRound",
+            adminId,
+            roomCode,
+          })
+        );
+
+        ws.onmessage = (event: MessageEvent) => {
+          const data = JSON.parse(event.data);
+          console.log("Message reçu after nextRound : ", data);
+          if (data.type === "nextRound") {
+            setRoom(data.room);
+            return setStep("waiting");
+          }
+          if (data.type === "gameOver") {
+            console.log("Game Over", data);
+            return setStep("results");
+          }
+        };
+      }
+    }
+
+    if (step === "results") {
+      naviguate("/create");
+    }
+  }, [step, ws, isConnected, adminId, roomCode, naviguate]);
 
   return (
     <div className="flex flex-col justify-evenly items-center gap-10 h-full w-full">
@@ -51,8 +84,12 @@ export const GameScreen: React.FC = () => {
         />
       )}
       {step === "valide" && answers && (
-        <ValideAnswers onNext={handleNextStep} />
+        <ValideAnswers
+          onNext={handleNextStep}
+          currentRound={room?.currentRound || 0}
+        />
       )}
+      {step === "results" && <GameOver onNext={handleNextStep} />}
     </div>
   );
 };
