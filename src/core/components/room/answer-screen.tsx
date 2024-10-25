@@ -48,7 +48,6 @@ export const ValideAnswers: React.FC<{
       ws.onmessage = (event: MessageEvent) => {
         const data = JSON.parse(event.data);
 
-        console.log("Message : ", data);
         if (data.type === "roundResults") {
           return setPlayersAnswers(data);
         }
@@ -71,9 +70,7 @@ export const ValideAnswers: React.FC<{
 
         ws.onmessage = (event: MessageEvent) => {
           const data = JSON.parse(event.data);
-          console.log("Word validated", data);
           if (data.type === "wordValidated") {
-            // set players anwers results but keep question
             setPlayersAnswers((prevAnswers) => {
               if (!prevAnswers) return null;
               return {
@@ -81,6 +78,7 @@ export const ValideAnswers: React.FC<{
                 results: data.results,
               };
             });
+
             setAllValidated(
               Object.values(data.results).every(
                 (result) => "validated" in (result as Result)
@@ -123,14 +121,16 @@ export const ValideAnswers: React.FC<{
             <div className="flex gap-4 mt-2">
               <button
                 className={classNames(
-                  "border w-[40px] h-[40px] flex items-center justify-center rounded-[10px] hover:bg-green-600 hover:text-white transition",
+                  "border w-[40px] h-[40px] flex items-center justify-center rounded-[10px] border-green-500 hover:bg-green-600 hover:text-white transition",
                   {
-                    "border-green-500 bg-transparent text-green-500":
-                      answer.validated === false || !answer.validated,
+                    " bg-transparent text-green-500":
+                      answer.validated === false ||
+                      answer.validated === undefined,
                     "bg-green-500 text-white": answer.validated === true,
                   }
                 )}
                 onClick={() => handleValidate(answer.playerId, true)}
+                disabled={answer.validated === true}
               >
                 O
               </button>
@@ -138,12 +138,19 @@ export const ValideAnswers: React.FC<{
                 className={classNames(
                   "border w-[40px] h-[40px] flex items-center justify-center rounded-[10px] hover:bg-red-600 hover:text-white transition",
                   {
+                    // if validated is true or answer.validated dont exit
                     "border-red-500 bg-transparent text-red-500":
-                      answer.validated === true || !answer.validated,
+                      answer.validated === true ||
+                      answer.validated === undefined,
                     "bg-red-500 text-white": answer.validated === false,
                   }
                 )}
-                onClick={() => handleValidate(answer.playerId, false)}
+                onClick={() =>
+                  answer.validated === false
+                    ? undefined
+                    : handleValidate(answer.playerId, false)
+                }
+                disabled={answer.validated === false}
               >
                 X
               </button>

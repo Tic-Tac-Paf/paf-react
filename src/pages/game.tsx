@@ -25,7 +25,6 @@ export const GameScreen: React.FC = () => {
 
       ws.onmessage = (event: MessageEvent) => {
         const data = JSON.parse(event.data);
-        console.log("Message reçu", data);
 
         if (data.type === "roomInfo" && data.room.code === roomCode) {
           return setRoom(data.room);
@@ -57,13 +56,12 @@ export const GameScreen: React.FC = () => {
 
         ws.onmessage = (event: MessageEvent) => {
           const data = JSON.parse(event.data);
-          console.log("Message reçu after nextRound : ", data);
+
           if (data.type === "nextRound") {
             setRoom(data.room);
             return setStep("waiting");
           }
           if (data.type === "gameOver") {
-            console.log("Game Over", data);
             return setStep("results");
           }
         };

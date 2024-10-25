@@ -30,8 +30,6 @@ export const WaitingRoomScreen: React.FC = () => {
       ws.onmessage = (event: MessageEvent) => {
         const data = JSON.parse(event.data);
 
-        console.log("Message reçu", data);
-
         if (data.type === "roomInfo" && data.room.code === roomCode) {
           setRoom(data.room);
           setIsAdmin(data.room.admin.id === adminId);

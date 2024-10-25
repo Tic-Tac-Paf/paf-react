@@ -38,8 +38,6 @@ export const Lobby: React.FC<{
       }
 
       if (ws) {
-        console.log("updateRoom");
-
         ws.send(
           JSON.stringify({
             type: "updateRoomInfo",
@@ -91,7 +89,7 @@ export const Lobby: React.FC<{
                   handleUpdateRoom("rounds", parseInt(e.target.value))
                 }
                 min={1}
-                max={10}
+                max={9}
                 className="w-[100px] h-[50px] text-[20px] md:text-[24px] text-center"
               />
             ) : (

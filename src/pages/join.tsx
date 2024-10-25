@@ -39,13 +39,6 @@ export const JoinScreen: React.FC = () => {
     }
 
     if (ws) {
-      console.log({
-        type: "joinRoom",
-        roomCode: accessCode,
-        username: name,
-        playerId: adminId,
-      });
-
       ws.send(
         JSON.stringify({
           type: "joinRoom",
