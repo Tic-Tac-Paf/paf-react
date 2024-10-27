@@ -1,60 +1,58 @@
 import { useEffect, useState } from "react";
+import SpinnerIcon from "../../../assets/img/spinner-icon";
+import { useWebSocket } from "../../hook/use-wss";
+import { Room } from "../../types/room";
+import CheckIcon from "../../../assets/img/check-icon";
 
 export const WaitingAnswers: React.FC<{
   onNext: () => void;
-  currentRound: number;
-}> = ({ onNext, currentRound }) => {
-  return (
-    <div className="flex flex-col justify-evenly items-center gap-10 h-full w-full">
-      <h2 className="text-[80px] ">Round {currentRound} :</h2>
-
-      <ProgressSlider duration={15} onNext={onNext} />
-      <h2 className="text-5xl text-center w-[40%] ">
-        En attente des réponses des joueurs ...
-      </h2>
-    </div>
-  );
-};
-
-const ProgressSlider: React.FC<{
-  duration: number;
-  onNext: () => void;
-}> = ({ duration, onNext }) => {
-  const [progress, setProgress] = useState(0);
-  const [startTime, setStartTime] = useState<number | null>(null);
+  room: Room;
+}> = ({ onNext, room }) => {
+  const { ws, isConnected } = useWebSocket();
+  const [nbAnswers, setNbAnswers] = useState<number[]>([]);
 
   useEffect(() => {
-    let animationFrameId: number;
+    if (ws && isConnected) {
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
 
-    const animate = (timestamp: number) => {
-      if (!startTime) {
-        setStartTime(timestamp);
-        return;
-      }
+        if (data.type === "broadcast") {
+          setNbAnswers((prev) => [...prev, 1]);
+        }
+      };
+    }
+  }, [ws, isConnected, setNbAnswers, nbAnswers]);
 
-      const elapsed = timestamp - startTime;
-      const newProgress = Math.min((elapsed / (duration * 1000)) * 100, 100);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onNext();
+    }, 15000);
 
-      setProgress(newProgress);
-
-      if (newProgress < 100) {
-        animationFrameId = requestAnimationFrame(animate);
-      } else {
-        onNext();
-      }
-    };
-
-    animationFrameId = requestAnimationFrame(animate);
-
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [duration, onNext, startTime]);
+    return () => clearTimeout(timer);
+  }, [onNext]);
 
   return (
-    <div className="w-[90%] h-[100px] bg-gray-200 border-2 border-primary rounded-full overflow-hidden">
-      <div
-        className="h-full bg-primary rounded-l-full transition-all"
-        style={{ width: `${progress}%` }}
-      />
+    <div className="flex flex-col justify-center items-center gap-10 h-full w-full">
+      <h2 className="text-[80px]">Round {room.currentRound} :</h2>
+
+      <div className="flex flex-row justify-center items-center gap-5">
+        {room.players.map((_, index) => (
+          <div
+            key={index}
+            className="flex flex-col justify-center items-center gap-2"
+          >
+            {nbAnswers.length > index ? (
+              <CheckIcon className="w-[60px] h-[60px] fill-green-500" />
+            ) : (
+              <SpinnerIcon className="w-[60px] h-[60px] animate-spin fill-primary" />
+            )}
+          </div>
+        ))}
+      </div>
+
+      <h2 className="text-5xl text-center w-[60%] mt-5">
+        En attente des réponses des joueurs ...
+      </h2>
     </div>
   );
 };

@@ -76,10 +76,7 @@ export const GameScreen: React.FC = () => {
   return (
     <div className="flex flex-col justify-evenly items-center gap-10 h-full w-full">
       {step === "waiting" && room && (
-        <WaitingAnswers
-          onNext={handleNextStep}
-          currentRound={room.currentRound}
-        />
+        <WaitingAnswers onNext={handleNextStep} room={room} />
       )}
       {step === "valide" && answers && (
         <ValideAnswers

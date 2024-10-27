@@ -5,6 +5,8 @@ import { useApp } from "../../hook/use-app";
 import { OutlinedButton } from "../../ui/buttons";
 import classNames from "classnames";
 import { Answer, Result } from "../../types/room";
+import CheckIcon from "../../../assets/img/check-icon";
+import CrossIcon from "../../../assets/img/cross-icon";
 
 export const ValideAnswers: React.FC<{
   onNext: () => void;
@@ -102,33 +104,43 @@ export const ValideAnswers: React.FC<{
               <div className="flex gap-4 mt-2">
                 <button
                   className={classNames(
-                    "border w-[40px] h-[40px] flex items-center justify-center rounded-[10px] border-green-500 hover:bg-green-600 hover:text-white transition",
+                    "border w-[40px] h-[40px] flex items-center justify-center rounded-[10px] border-green-500 hover:bg-green-600 hover:fill-white hover:text-white transition",
                     {
-                      " bg-transparent text-green-500":
+                      " bg-transparent fill-green-500":
                         answer.validated === false ||
                         answer.validated === undefined,
-                      "bg-green-500 text-white": answer.validated === true,
+                      "bg-green-500 fill-white": answer.validated === true,
                     }
                   )}
                   onClick={() => handleValidate(answer.playerId, true)}
                   disabled={answer.validated === true}
                 >
-                  O
+                  <CheckIcon
+                    className="w-4 h-4 fill-inherit"
+                    style={{
+                      transition: "0s ease-in-out",
+                    }}
+                  />
                 </button>
                 <button
                   className={classNames(
-                    "border w-[40px] h-[40px] flex items-center justify-center rounded-[10px] hover:bg-red-600 hover:text-white transition",
+                    "border w-[40px] h-[40px] flex items-center justify-center rounded-[10px] hover:bg-red-600 hover:fill-white hover:text-white transition",
                     {
-                      "border-red-500 bg-transparent text-red-500":
+                      "border-red-500 bg-transparent fill-red-500":
                         answer.validated === true ||
                         answer.validated === undefined,
-                      "bg-red-500 text-white": answer.validated === false,
+                      "bg-red-500 fill-white": answer.validated === false,
                     }
                   )}
                   onClick={() => handleValidate(answer.playerId, false)}
                   disabled={answer.validated === false}
                 >
-                  X
+                  <CrossIcon
+                    className="w-4 h-4 fill-inherit transition-none"
+                    style={{
+                      transition: "0s ease-in-out",
+                    }}
+                  />
                 </button>
               </div>
             </div>
