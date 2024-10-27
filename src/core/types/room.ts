@@ -1,9 +1,22 @@
 export interface Answer {
-  name: string;
-  answer: string;
-  valided: {
-    [key: string]: boolean;
+  type: string;
+  question: {
+    question: string;
+    answer: string;
   };
+  results: [
+    {
+      playerId: string;
+      word: string;
+      validated: boolean;
+      username: string;
+    }
+  ];
+}
+
+export interface Result {
+  word: string;
+  validated: boolean;
 }
 
 export interface Question {
@@ -31,4 +44,5 @@ export interface Room {
 export interface Player {
   id: string;
   username: string;
+  points: number;
 }

@@ -1,5 +1,6 @@
 import { InputHTMLAttributes, forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
+import { SelectOption, SelectProps } from "../types/form";
 
 export const TextInput = forwardRef<
   HTMLInputElement | null,
@@ -18,16 +19,6 @@ export const TextInput = forwardRef<
 });
 
 TextInput.displayName = "TextInput";
-
-export interface SelectOption {
-  value: string;
-  label: string;
-}
-
-interface SelectProps
-  extends Omit<InputHTMLAttributes<HTMLSelectElement>, "size" | "color"> {
-  options: SelectOption[];
-}
 
 export const SelectInput = forwardRef<HTMLSelectElement | null, SelectProps>(
   ({ className, options, ...props }, ref) => {

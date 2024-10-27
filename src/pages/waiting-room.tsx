@@ -20,8 +20,8 @@ export const WaitingRoomScreen: React.FC = () => {
   const [room, setRoom] = useState<Room | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [questions, setQuestions] = useState<RoundQuestions>([]);
-  const [round, setRound] = useState(1); // État pour suivre le numéro du round
-  const [totalRounds, setTotalRounds] = useState(3); // Nombre total de rounds (modifiable)
+  const [round, setRound] = useState(1);
+  const [totalRounds, setTotalRounds] = useState(3);
 
   useEffect(() => {
     if (ws && roomCode && isConnected) {
@@ -84,7 +84,7 @@ export const WaitingRoomScreen: React.FC = () => {
 
   const handleNextRound = (selectedQuestion?: string[]) => {
     if (round < totalRounds) {
-      setRound((prevRound) => prevRound + 1); // Passe au round suivant
+      setRound((prevRound) => prevRound + 1);
     } else {
       if (ws) {
         ws.send(
@@ -115,9 +115,9 @@ export const WaitingRoomScreen: React.FC = () => {
 
       {step === "game" && questions.length > 0 && (
         <SelectQuestions
-          questions={questions[round - 1]} // Sélectionne les questions pour le round actuel
-          onNext={handleNextRound} // Appel pour avancer dans les rounds
-          round={round} // Passe le numéro du round actuel
+          questions={questions[round - 1]}
+          onNext={handleNextRound}
+          round={round}
           room={room as Room}
         />
       )}

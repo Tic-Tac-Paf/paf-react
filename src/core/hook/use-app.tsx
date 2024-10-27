@@ -15,7 +15,7 @@ export const useApp = () => {
     if (storedRoomCode) {
       setRoomCode(storedRoomCode);
     }
-  }, []); // Ce useEffect s'exécute une seule fois au montage du composant
+  }, []);
 
   return { roomCode, adminId };
 };

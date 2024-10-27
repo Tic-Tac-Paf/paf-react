@@ -2,30 +2,16 @@ import React, { useCallback, useEffect, useState } from "react";
 import { OutlinedButton } from "../core/ui/buttons";
 import UserIcon from "../assets/img/user-icon";
 import { useNavigate } from "react-router-dom";
-import { SelectInput, SelectOption, TextInput } from "../core/ui/form-inputs";
+import { SelectInput, TextInput } from "../core/ui/form-inputs";
 import { useWebSocket } from "../core/hook/use-wss";
 
 import { ToastContainer, toast } from "react-toastify";
 import { useApp } from "../core/hook/use-app";
-
-const gameModes: SelectOption[] = [
-  {
-    label: "Choisir un mode",
-    value: "",
-  },
-  {
-    label: "Trouver le bon mot",
-    value: "findWord",
-  },
-  {
-    label: "Ecrire des mots",
-    value: "writeWord",
-  },
-];
+import { gameModes } from "../core/types/form";
 
 export const CreateScreen: React.FC = () => {
   const navigate = useNavigate();
-  const { ws } = useWebSocket(); // Utilisation du WebSocket via le Provider
+  const { ws } = useWebSocket();
   const { adminId } = useApp();
 
   const [name, setName] = useState("");

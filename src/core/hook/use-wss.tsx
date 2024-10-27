@@ -1,14 +1,11 @@
-// WebSocketContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-// Define the context type
 interface WebSocketContextType {
   ws: WebSocket | null;
   sendMessage: (message: string) => void;
   isConnected: boolean;
 }
 
-// Create the WebSocket context
 const WebSocketContext = createContext<WebSocketContextType | undefined>(
   undefined
 );
@@ -29,7 +26,6 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const websocket = new WebSocket("wss://paf-api.onrender.com");
-    // const websocket = new WebSocket("ws://localhost:3000");
 
     websocket.onopen = () => {
       console.log("Connected to the server");

@@ -8,7 +8,7 @@ import { useApp } from "../core/hook/use-app";
 
 export const JoinScreen: React.FC = () => {
   const navigate = useNavigate();
-  const { ws } = useWebSocket(); // Récupérer la connexion WebSocket depuis le contexte
+  const { ws } = useWebSocket();
   const { adminId } = useApp();
 
   const [name, setName] = useState("");
@@ -19,7 +19,6 @@ export const JoinScreen: React.FC = () => {
 
     if (!ws) return;
 
-    // Ecouter les messages pour confirmer la connexion à la room
     ws.onmessage = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
 
@@ -28,7 +27,7 @@ export const JoinScreen: React.FC = () => {
         localStorage.setItem("roomCode", data.room.code);
         navigate(`/waiting-room`);
       } else if (data.type === "error") {
-        alert(data.message); // Afficher l'erreur reçue depuis le serveur
+        alert(data.message);
       }
     };
   }, [ws, accessCode, navigate]);

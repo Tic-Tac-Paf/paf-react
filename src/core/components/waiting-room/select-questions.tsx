@@ -16,7 +16,7 @@ export const SelectQuestions: React.FC<{
       setSelectedQuestions(questions);
 
       if (questions.length <= room.rounds) {
-        onNext(questions); // Passe la question sélectionnée pour l'avancement
+        onNext(questions);
       }
     },
     [onNext, room.rounds, selectedQuestions]
@@ -45,7 +45,7 @@ const QuestionItem: React.FC<{
   onVote: (_value: string) => void;
 }> = ({ question, index, onVote }) => {
   const handleClick = useCallback(() => {
-    onVote(question._id); // Passe l'ID de la question sélectionnée
+    onVote(question._id);
   }, [onVote, question]);
 
   return (

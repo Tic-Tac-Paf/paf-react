@@ -1,17 +1,12 @@
 import React, { useCallback, useMemo } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import { SelectInput, SelectOption, TextInput } from "../../ui/form-inputs";
+import { SelectInput, TextInput } from "../../ui/form-inputs";
 import { Player, Room } from "../../types/room";
 import { OutlinedButton } from "../../ui/buttons";
 import UserIcon from "../../../assets/img/user-icon";
 import { useApp } from "../../hook/use-app";
 import { useWebSocket } from "../../hook/use-wss";
-
-const difficulties: SelectOption[] = [
-  { label: "Facile", value: "easy" },
-  { label: "Moyen", value: "medium" },
-  { label: "Difficile", value: "hard" },
-];
+import { difficulties } from "../../types/form";
 
 export const Lobby: React.FC<{
   room: Room;

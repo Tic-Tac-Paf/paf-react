@@ -87,7 +87,9 @@ export const GameScreen: React.FC = () => {
           currentRound={room?.currentRound || 0}
         />
       )}
-      {step === "results" && <GameOver onNext={handleNextStep} />}
+      {step === "results" && room && (
+        <GameOver onNext={handleNextStep} room={room} />
+      )}
     </div>
   );
 };
