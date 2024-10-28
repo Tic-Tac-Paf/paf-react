@@ -62,6 +62,7 @@ export const GameScreen: React.FC = () => {
             return setStep("waiting");
           }
           if (data.type === "gameOver") {
+            setRoom(data.room);
             return setStep("results");
           }
         };

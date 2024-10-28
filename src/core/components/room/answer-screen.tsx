@@ -88,7 +88,7 @@ export const ValideAnswers: React.FC<{
         </p>
       </div>
 
-      <div className="w-full grid grid-cols-3 justify-items-center mb-8 overflow-y-auto">
+      <div className="w-full grid md:grid-cols-3 justify-items-center gap-5 md:gap-0 mb-8 overflow-y-auto">
         {playersAnswers?.results
           .sort((a, b) => a.username.localeCompare(b.username))
           .map((answer, index) => (
@@ -96,7 +96,14 @@ export const ValideAnswers: React.FC<{
               key={index}
               className="max-w-[400px] w-full flex flex-col items-center justify-center bg-gray-100 p-6 rounded-lg shadow-lg gap-4"
             >
-              <UserItem name={answer.username} />
+              <div className="flex items-end gap-2">
+                <UserItem name={answer.username} />
+
+                <p className="text-[12px] mb-2">
+                  {(answer.responseTime / 1000).toFixed(2)}
+                  <span className="text-[8px]">s</span>
+                </p>
+              </div>
               <div className="border-2 border-black bg-white rounded-lg w-full h-16 flex items-center justify-center p-2">
                 <p className="text-lg font-inter">{answer.word}</p>
               </div>
@@ -148,7 +155,9 @@ export const ValideAnswers: React.FC<{
       </div>
 
       <OutlinedButton
-        label="Prochain round"
+        label={
+          allValidated ? "Passer à la prochaine manche" : "Valider les réponses"
+        }
         onClick={onNext}
         disabled={!allValidated}
       />

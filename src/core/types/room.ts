@@ -10,6 +10,7 @@ export interface Answer {
       word: string;
       validated: boolean;
       username: string;
+      responseTime: number;
     }
   ];
 }
@@ -17,6 +18,7 @@ export interface Answer {
 export interface Result {
   word: string;
   validated: boolean;
+  responseTime: number;
 }
 
 export interface Question {
